@@ -2,8 +2,9 @@ package alipay
 
 import (
 	"log"
-	// "io/ioutil"
+	"errors"
 	"net/http"
+	"strconv"
 	"github.com/revel/revel"
 )
 
@@ -16,29 +17,25 @@ type Invoice struct{
 }
 
 func Return(req *http.Request) (*Invoice, error) {
- 	var invoice Invoice
-
  	log.Println("return req: %v", req)
 
- 	return &invoice, nil
+ 	var invoice Invoice
+ 	queries := req.Request.URL.Query()
+ 	if queries["trade_status"] == "TRADE_FINISHED" || queries["trade_status"] == "TRADE_SUCCESS" {
+ 		invoice.OutTradeNo = queries.Get("out_trade_no")
+	 	invoice.TradeNo = queries.Get("trade_no")
+	 	invoice.BuyerID = queries.Get("buyer_id")
+	 	invoice.BuyerEmail = queries.Get("buyer_email")		
+		fee, _ := strconv.ParseFloat(queries.Get("total_fee"), 64)
+		invoice.TotalFee = fee
+		return &invoice, nil
+ 	}
+
+ 	return nil, errors.New("trade status is not success or finished.")
 }
 
 func RevelReturn(req *revel.Request) (*Invoice, error) {
- 	var invoice Invoice
-
- 	/* 
- 		example callback:
-
- 		http://host:8089/alipay/return?body=%E5%95%86%E5%93%81%E6%8F%8F%E8%BF%B0&buyer_email=liujianping.china%40gmail.com&buyer_id=2088002682817561&exterface=create_direct_pay_by_user&is_success=T&notify_id=RqPnCoPT3K9%252Fvwbh3InSN9my8gXIc%252B8upZpoIlITHLNSPcjNlMGzKyMz7hcY2anEq0OF&notify_time=2015-05-15+15%3A21%3A50&notify_type=trade_status_sync&out_trade_no=%E8%AE%A2%E5%8D%95%E5%8F%B7&payment_type=1&seller_email=liujianping.itech%40qq.com&seller_id=2088511709408410&subject=%E5%95%86%E5%93%81%E5%90%8D%E7%A7%B0&total_fee=0.01&trade_no=2015051500001000560051315660&trade_status=TRADE_SUCCESS&sign=13ca538ac7b812f198df96e15e968acf&sign_type=MD5
-
-	*/
- 	log.Println("revel return req method: %s", req.Request.Method)
- 	log.Println("revel return req: %s", req.Request.URL.String())
-
- 	queries := req.Request.URL.Query()
- 	log.Println("revel return req queries:", queries)
-
- 	return &invoice, nil
+ 	return Return(req.Request)
 }
 
 func Notify(req *http.Request) (*Invoice, error) {
