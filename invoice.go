@@ -21,7 +21,8 @@ func Return(req *http.Request) (*Invoice, error) {
 
  	var invoice Invoice
  	queries := req.URL.Query()
- 	if queries["trade_status"] == "TRADE_FINISHED" || queries["trade_status"] == "TRADE_SUCCESS" {
+ 	trade_status := queries.Get("trade_status")
+ 	if trade_status == "TRADE_FINISHED" || trade_status == "TRADE_SUCCESS" {
  		invoice.OutTradeNo = queries.Get("out_trade_no")
 	 	invoice.TradeNo = queries.Get("trade_no")
 	 	invoice.BuyerID = queries.Get("buyer_id")
