@@ -2,6 +2,7 @@ package alipay
 
 import (
 	"log"
+	"io/ioutil"
 	"net/http"
 	"github.com/revel/revel"
 )
@@ -34,6 +35,7 @@ func RevelReturn(req *revel.Request) (*Invoice, error) {
  	log.Println("revel return req method: %s", req.Request.Method)
  	log.Println("revel return req: %s", req.Request.URL.String())
 
+
  	return &invoice, nil
 }
 
@@ -50,6 +52,13 @@ func RevelNotify(req *revel.Request) (*Invoice, error) {
 
  	log.Println("revel notify req method: %s", req.Request.Method)
  	log.Println("revel notify req: %s", req.Request.URL.String())
+
+ 	body, err := ioutil.ReadAll(req.Request.Body)
+ 	if err != nil {
+ 		return nil, err
+ 	}
+
+ 	log.Println("revel notify body: %s", string(body))
 
  	return &invoice, nil
 }
