@@ -40,9 +40,6 @@ func Return(req *http.Request) (*Invoice, error) {
 func Notify(req *http.Request) (*Invoice, error) {
 	var invoice Invoice
 
- 	log.Println("notify req method: %s", req.Request.Method)
- 	log.Println("notify req: %s", req.Request.URL.String())
-
  	body, err := ioutil.ReadAll(req.Request.Body)
  	if err != nil {
  		return nil, err
