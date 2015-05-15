@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/h2object/alipay"
 	"github.com/revel/revel"
+	"time"
 )
 
 type Alipay struct {
@@ -10,7 +11,7 @@ type Alipay struct {
 }
 
 func (c Alipay) Payment() revel.Result {
-	payment := alipay.NewDirectPayment("订单号", "商品名称", "商品描述", 0.01)
+	payment := alipay.NewDirectPayment(time.Now().Format("2006-10-03_10_23_44"), "商品名称", "商品描述", 0.01)
 	page := alipay.PaymentPage(payment, "", "")
 	return c.RenderHtml(page)
 }
