@@ -32,7 +32,7 @@ var (
 
 -	发起支付
 
-	payment := alipay.NewDirectPayment("order","subject","description", 0.01)
+	payment := alipay.NewDirectPayment("订单号","商品名称","商品描述", 0.01)
 
 	page := alipay.PaymentPage(payment, "http://ReturnURL", "http://NotifyURL")
 
