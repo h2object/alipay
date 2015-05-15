@@ -2,7 +2,7 @@ package alipay
 
 import (
 	"log"
-	"io/ioutil"
+	// "io/ioutil"
 	"net/http"
 	"github.com/revel/revel"
 )
