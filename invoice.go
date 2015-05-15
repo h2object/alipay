@@ -20,7 +20,7 @@ func Return(req *http.Request) (*Invoice, error) {
  	log.Println("return req: %v", req)
 
  	var invoice Invoice
- 	queries := req.Request.URL.Query()
+ 	queries := req.URL.Query()
  	if queries["trade_status"] == "TRADE_FINISHED" || queries["trade_status"] == "TRADE_SUCCESS" {
  		invoice.OutTradeNo = queries.Get("out_trade_no")
 	 	invoice.TradeNo = queries.Get("trade_no")
